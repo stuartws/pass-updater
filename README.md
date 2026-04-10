@@ -29,6 +29,12 @@ chmod +x pass-updater.sh
 ./pass-updater.sh
 ```
 
+Consider linking the script to a directory on your $PATH:
+
+```bash
+ln -s $(realpath ./pass-updater.sh) ~/.local/bin/pass-updater
+```
+
 ## Notes
 
 - The script works for both fresh installs and updates.
