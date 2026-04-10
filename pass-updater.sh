@@ -37,15 +37,15 @@ fi
 echo "Downloading $filename"
 curl --silent --show-error --output "/tmp/$filename" "$rpm_url"
 
-# Stop Proton Pass if it's running
-pid="$(pidof proton-pass || true)"
-if [[ -n ${pid:-} ]]; then
-    kill "$pid"
-    wasrunning=1
-fi
-
 # Compare the RPM file against its hash, then install it
 if echo "$rpm_checksum  /tmp/$filename" | sha512sum --check --status; then
+    # Stop Proton Pass if it's running
+    pid="$(pidof proton-pass || true)"
+    if [[ -n ${pid:-} ]]; then
+        kill "$pid"
+        wasrunning=1
+    fi
+
     echo "Installing $filename"
     sudo dnf -y install "/tmp/$filename" && echo -e "\nInstalled Proton Pass v$version released $(date -d "$releasedate" +"%Y-%m-%d")."
 else
