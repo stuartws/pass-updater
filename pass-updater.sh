@@ -17,7 +17,7 @@ sudo -v
 # Get Proton's JSON file which contains version information
 json_url="https://proton.me/download/PassDesktop/linux/x64/version.json"
 echo "Downloading $json_url"
-curl --silent --show-error --output /tmp/protonpass_version.json "$json_url"
+curl -fsSLo /tmp/protonpass_version.json "$json_url"
 
 
 # Extract URL, checksum, version, and release date from the JSON contents
@@ -35,7 +35,7 @@ fi
 
 # Download the RPM file
 echo "Downloading $filename"
-curl --silent --show-error --output "/tmp/$filename" "$rpm_url"
+curl -fsSLo "/tmp/$filename" "$rpm_url"
 
 # Compare the RPM file against its hash, then install it
 if echo "$rpm_checksum  /tmp/$filename" | sha512sum --check --status; then
