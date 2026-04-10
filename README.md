@@ -5,11 +5,11 @@ A simple shell script to install or update [Proton Pass](https://proton.me/pass)
 ## What it does
 
 1. Prompts for `sudo` credentials upfront before any downloading begins
-2. Stops Proton Pass if it is currently running
-3. Fetches the latest stable release information from Proton's servers
-4. Exits early if the latest version is already installed
-5. Downloads the latest `.rpm` package
-6. Verifies the download against its SHA-512 checksum
+2. Fetches the latest stable release information from Proton's servers
+3. Exits early if the latest version is already installed
+4. Downloads the latest `.rpm` package
+5. Verifies the download against its SHA-512 checksum
+6. Stops Proton Pass if it is currently running
 7. Installs the package via `dnf`
 8. Cleans up temporary files
 9. Restarts Proton Pass if it was running before the update
