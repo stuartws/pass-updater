@@ -50,4 +50,5 @@ if echo "$rpm_checksum  /tmp/$filename" | sha512sum --check --status; then
     sudo dnf -y install "/tmp/$filename" && echo -e "\nInstalled Proton Pass v$version released $(date -d "$releasedate" +"%Y-%m-%d")."
 else
     echo -e "\nChecksum comparison failed - could not install." >&2
+    exit 1
 fi
