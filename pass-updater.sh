@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-reopen_protonpass() {
-    # Reopen Proton Pass if it gets closed by the script
-    if [[ -n ${wasrunning:-} ]]; then
+wasrunning=""
+filename=""
+
+cleanup() {
+    if [[ -n "${wasrunning:-}" ]]; then
         proton-pass > /dev/null 2>&1 & disown
     fi
+    rm -f /tmp/protonpass_version.json "${filename:+/tmp/$filename}"
 }
-
-# How to exit politely
-trap 'reopen_protonpass; rm -f /tmp/protonpass_version.json ${filename:+/tmp/$filename}' EXIT
+trap cleanup EXIT
 
 # Cache credentials (if supported)
 sudo -v
@@ -22,6 +23,10 @@ curl -fsSLo /tmp/protonpass_version.json "$json_url"
 
 # Extract URL, checksum, version, and release date from the JSON contents
 rpm_url="$(jq -r '[.Releases[] | select(.CategoryName=="Stable")][0].File[] | select(.Url | endswith(".rpm")).Url' /tmp/protonpass_version.json)"
+if [[ -z "$rpm_url" ]]; then
+    echo "Error: Could not find RPM download URL in version info" >&2
+    exit 1
+fi
 rpm_checksum="$(jq -r '[.Releases[] | select(.CategoryName=="Stable")][0].File[] | select(.Url | endswith(".rpm")).Sha512CheckSum' /tmp/protonpass_version.json)"
 version="$(jq -r '[.Releases[] | select(.CategoryName=="Stable")][0].Version' /tmp/protonpass_version.json)"
 releasedate="$(jq -r '[.Releases[] | select(.CategoryName=="Stable")][0].ReleaseDate' /tmp/protonpass_version.json)"
